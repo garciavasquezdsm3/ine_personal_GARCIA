@@ -75,56 +75,65 @@
 <!-- cierre de la sección "sobre-mi" -->
 </section>
 
-    <!-- div contenedor: flex flex-col apila las cajas en columna en celular -->
-<!-- md:flex-row: desde 768px cambia a fila · gap-4: separación entre cajas -->
-<div class="flex flex-col md:flex-row gap-4">
-  <!-- primera caja: fondo verde claro y relleno interno -->
-  <div class="bg-emerald-200 p-4">Caja 1</div>
-  <!-- segunda caja: mismo patrón, un tono de verde más oscuro -->
-  <div class="bg-emerald-300 p-4">Caja 2</div>
-<!-- cierre del div contenedor -->
-</div>
-<!-- section id="skills": acá aterriza el enlace "Skills" del nav -->
-<!-- bg-slate-50: fondo gris muy claro que separa visualmente esta sección de "sobre-mi" -->
-<!-- py-14: relleno vertical de la sección -->
-<section id="skills" class="bg-slate-50 py-14">
-  <!-- div interno: max-w-5xl mx-auto centra y limita el ancho, igual que en "sobre-mi" -->
-  <div class="max-w-5xl mx-auto px-6">
-    <!-- título de la sección, mismo estilo que "Sobre mí" -->
-    <h2 class="text-2xl font-bold mb-6">Skills</h2>
-    <!-- grid-cols-1 sm:grid-cols-2 md:grid-cols-3: 1 columna en celular, 2 en tablet (sm), 3 en escritorio (md) -->
-    <!-- gap-5: separación entre tarjetas -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-      <!-- primera tarjeta: fondo blanco, borde, esquinas redondeadas y relleno -->
-      <!-- shadow-sm hover:shadow-md transition: sombra leve que crece suavemente al pasar el mouse -->
-      <article class="bg-white rounded-xl border border-slate-200 p-5
-        shadow-sm hover:shadow-md transition">
-        <!-- font-semibold: nombre de la skill en semi-negrita · mb-1: margen chico abajo -->
-        <h3 class="font-semibold mb-1">HTML5</h3>
-        <!-- text-sm text-slate-500: descripción breve, más chica y gris que el título -->
-        <p class="text-sm text-slate-500">Estructura semántica de páginas web.</p>
-      <!-- cierre de la primera tarjeta -->
-      </article>
-      <!-- segunda tarjeta: mismas clases exactas, solo cambia el contenido -->
-      <article class="bg-white rounded-xl border border-slate-200 p-5
-        shadow-sm hover:shadow-md transition">
-        <h3 class="font-semibold mb-1">Tailwind CSS</h3>
-        <p class="text-sm text-slate-500">Estilos responsivos utility-first.</p>
-      <!-- cierre de la segunda tarjeta -->
-      </article>
-      <!-- tercera tarjeta: mismo patrón otra vez -->
-      <article class="bg-white rounded-xl border border-slate-200 p-5
-        shadow-sm hover:shadow-md transition">
-        <h3 class="font-semibold mb-1">Git & GitHub</h3>
-        <p class="text-sm text-slate-500">Control de versiones y despliegue.</p>
-      <!-- cierre de la tercera tarjeta -->
-      </article>
-    <!-- cierre de la grilla de skills -->
-    </div>
-  <!-- cierre del div interno -->
+<!-- footer id="contacto": acá aterriza el enlace "Contacto" del nav -->
+<!-- bg-slate-900 text-white: mismo tono oscuro que el header, para cerrar la página con el mismo color -->
+<footer id="contacto" class="bg-slate-900 text-white py-14">
+  <!-- max-w-xl mx-auto: contenedor más angosto que las otras secciones, cómodo para un formulario -->
+  <div class="max-w-xl mx-auto px-6">
+    <!-- título de sección, mismo estilo que las anteriores -->
+    <h2 class="text-2xl font-bold mb-6">Contacto</h2>
+
+    <!-- form: space-y-4 agrega separación vertical automática entre cada div hijo directo -->
+    <form class="space-y-4">
+      <!-- div: agrupa la etiqueta y el campo de "Nombre" -->
+      <div>
+        <!-- block: el label ocupa su propia línea, arriba del input · text-sm font-semibold: letra chica y semi-negrita -->
+        <label for="nombre" class="block text-sm font-semibold mb-1">Nombre</label>
+        <input
+          <!-- type="text": campo de texto simple, igual que la semana 1 -->
+      </div>
+
+      <!-- div: agrupa la etiqueta y el campo de "Correo" -->
+      <div>
+        <label for="correo" class="block text-sm font-semibold mb-1">Correo</label>
+        <input
+          <!-- type="email": el navegador exige el formato usuario@dominio antes de dejar enviar -->
+      </div>
+
+      <!-- div: agrupa la etiqueta y el campo de "Mensaje" -->
+      <div>
+        <label for="mensaje" class="block text-sm font-semibold mb-1">Mensaje</label>
+        <!-- textarea: campo de varias líneas, no lleva atributo "type" -->
+        <textarea
+          id="mensaje"
+          name="mensaje"
+          required
+          <!-- entre 10 y 500 caracteres -->
+          minlength="10"
+          maxlength="500"
+          <!-- rows: cuántas líneas de alto se ven sin hacer scroll -->
+          rows="4"
+          <!-- mismas clases que los otros campos, más resize-none para que el usuario no pueda estirarlo -->
+          class="w-full rounded-lg bg-slate-800 border border-slate-700
+            px-4 py-2 text-white placeholder-slate-500 resize-none
+            focus:outline-none focus:ring-2 focus:ring-emerald-400"></textarea>
+      <!-- cierre del div de "Mensaje" -->
+      </div>
+
+      <!-- button type="submit": dispara el envío y activa la validación de todos los campos de arriba -->
+      <button type="submit"
+        <!-- bg-emerald-600 hover:bg-emerald-700: fondo verde que se oscurece al pasar el mouse · transition: suaviza el cambio -->
+        <!-- text-white font-semibold: texto claro y semi-negrita · px-6 py-2.5 rounded-lg: relleno y esquinas redondeadas -->
+        <!-- focus:ring-offset-2 focus:ring-offset-slate-900: separa el aro de foco del fondo oscuro para que se vea bien -->
+        Enviar
+      <!-- cierre de button -->
+      </button>
+    <!-- cierre del form -->
+    </form>
+  <!-- cierre del div contenedor -->
   </div>
-<!-- cierre de la sección "skills" -->
-</section>
+<!-- cierre de footer -->
+</footer>
 </body>
 <!-- section id="proyectos": acá aterriza el enlace "Proyectos" del nav -->
 <!-- max-w-5xl mx-auto px-6 py-14: mismo contenedor centrado que las secciones anteriores -->
