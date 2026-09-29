@@ -1,162 +1,523 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>P2 GVO</title>
-    <!-- Play CDN: descarga Tailwind y genera las clases que uses, sin build step -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Garcia Vasquez Oscar · Portafolio</title>
+  <meta name="description" content="Portafolio de Garcia Vasquez Oscar — desarrollo web y aplicaciones.">
+  
+  <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-<!-- cierre de head -->
+  
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#edf5f0',
+              100: '#dcebe1',
+              200: '#c0d9ca',
+              300: '#9fc2ad',
+              400: '#7da58e',
+              500: '#638a74',
+              600: '#4f735f',
+              700: '#405d4e',
+              800: '#344b3e',
+              900: '#293c32',
+            },
+            ink: '#0b110e',
+            slate: {
+              50: '#0c110e',
+              100: '#151d18',
+              200: '#dfe4dd',
+              300: '#c8d0c7',
+              400: '#95a197',
+              500: '#6c796f',
+              600: '#536157',
+              700: '#3e4b42',
+              900: '#141c17'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    code, .font-mono { font-family: 'JetBrains Mono', monospace; }
+    
+    .scroll-progress {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 60;
+      height: 3px;
+      background: rgba(159, 194, 173, 0.14);
+      pointer-events: none;
+    }
+    #scroll-progress-bar {
+      display: block;
+      width: 100%;
+      height: 100%;
+      transform: scaleX(0);
+      transform-origin: left;
+      background: linear-gradient(90deg, #10b981, #638a74, #c0d9ca);
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.55);
+    }
+
+    nav a { position: relative; }
+    nav a::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: -6px;
+      left: 0;
+      height: 2px;
+      background: #10b981;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 220ms ease;
+    }
+    nav a:hover::after { transform: scaleX(1); }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.6;
+      background-image: linear-gradient(rgba(159, 194, 173, 0.1) 1px, transparent 1px), 
+                        linear-gradient(90deg, rgba(159, 194, 173, 0.1) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+      animation: grid-drift 32s linear infinite;
+    }
+    .hero-grid::after {
+      content: "";
+      position: absolute;
+      inset: -40% 0 auto;
+      height: 40%;
+      background: linear-gradient(180deg, transparent, rgba(16, 185, 129, 0.15), transparent);
+      animation: light-sweep 8s ease-in-out infinite;
+    }
+
+    .profile-photo {
+      animation: photo-glow 3.5s ease-in-out infinite;
+    }
+
+    @keyframes grid-drift { to { background-position: 48px 48px; } }
+    @keyframes light-sweep { to { transform: translateY(400%); } }
+    @keyframes photo-glow { 50% { filter: drop-shadow(0 0 18px rgba(16, 185, 129, 0.45)); } }
+
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 700ms ease, transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+    .scroll-reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .scroll-reveal h2 {
+      position: relative;
+      width: fit-content;
+      padding-bottom: 0.25rem;
+    }
+    .scroll-reveal h2::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 40px;
+      height: 2px;
+      background: #10b981;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 500ms ease 200ms;
+    }
+    .scroll-reveal.is-visible h2::after { transform: scaleX(1); }
+
+    .card-hover {
+      transition: all 280ms ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-4px);
+      border-color: rgba(16, 185, 129, 0.4);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .back-to-top {
+      position: fixed;
+      right: 1.25rem;
+      bottom: 1.25rem;
+      z-index: 60;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all 220ms ease;
+    }
+    .back-to-top.is-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  </style>
 </head>
-</head> 
-<body> 
-<!-- header: bg-slate-900 fondo oscuro · text-white texto claro -->
-<!-- flex flex-col: apila nombre y nav en columna en celular · gap-4: separación entre ambos -->
-<!-- md:flex-row md:items-center md:justify-between: desde 768px, en fila, centrado y con espacio entre los dos -->
-<!-- px-6 py-6: relleno en celular · md:px-10: más relleno horizontal en escritorio -->
-<header class="bg-slate-900 text-white flex flex-col gap-4
-  md:flex-row md:items-center md:justify-between
-  px-6 py-6 md:px-10">
-  <!-- div: agrupa el nombre y el subtítulo para que viajen juntos -->
-  <div>
-    <!-- text-2xl: tamaño de letra en celular · md:text-3xl: más grande desde 768px · font-bold: negrita -->
-    <h1 class="text-2xl md:text-3xl font-bold">GARCIA VASQUEZ OSCAR</h1>
-    <!-- text-slate-300: gris claro para diferenciarlo del título · mt-1: margen chico arriba -->
-    <p class="text-slate-300 mt-1">Estudiante de Desarrollo Web · UTH</p>
-  <!-- cierre del div de nombre/subtítulo -->
-  </div>
-  <!-- nav: agrupa los enlaces de navegación interna -->
-  <nav>
-    <!-- flex: enlaces en fila · gap-5: separación entre ellos · flex-wrap: bajan de línea si no entran -->
-    <!-- text-sm font-semibold: letra chica y semi-negrita, típico de un menú -->
-    <ul class="flex gap-5 flex-wrap text-sm font-semibold">
-      <!-- li + a: cada enlace cambia a verde (hover:text-emerald-400) al pasar el mouse -->
-      <li><a class="hover:text-emerald-400" href="#sobre-mi">Sobre mí</a></li>
-      <!-- mismo patrón de clase, salta a la sección "skills" -->
-      <li><a class="hover:text-emerald-400" href="#skills">Skills</a></li>
-      <!-- salta a la nueva sección "proyectos" que agregás en este paso -->
-      <li><a class="hover:text-emerald-400" href="#proyectos">Proyectos</a></li>
-      <!-- salta al footer con id="contacto" -->
-      <li><a class="hover:text-emerald-400" href="#contacto">Contacto</a></li>
-    <!-- cierre de la lista de enlaces -->
-    </ul>
-  <!-- cierre de nav -->
-  </nav>
-<!-- cierre de header -->
-</header>
-<!-- section id="sobre-mi": acá aterriza el enlace "Sobre mí" del nav -->
-<!-- max-w-5xl mx-auto: limita el ancho del contenido y lo centra -->
-<!-- px-6 py-14: relleno horizontal y vertical de la sección -->
-<!-- grid grid-cols-1 md:grid-cols-2: una columna en celular, dos desde 768px -->
-<!-- gap-8: separación entre columnas · items-center: centra verticalmente el contenido de cada columna -->
-<section id="sobre-mi"
-  class="max-w-5xl mx-auto px-6 py-14
-    grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-  <!-- primera columna: título y texto de presentación -->
-  <div>
-    <!-- text-2xl font-bold: título de sección · mb-3: margen abajo antes del texto -->
-    <h2 class="text-2xl font-bold mb-3">Sobre mí</h2>
-    <!-- text-slate-600: gris para el cuerpo de texto · leading-relaxed: más espacio entre líneas -->
-    <p class="text-slate-600 leading-relaxed">
-      Soy oscar y me gusta el desarrollo web.
-    </p>
-  <!-- cierre de la primera columna -->
-  </div>
-  <!-- segunda columna: podés usar una foto, un ícono o una cita destacada -->
-  <!-- bg-slate-50: fondo gris muy claro para diferenciarla del fondo blanco de la página -->
-  <!-- rounded-2xl: esquinas bien redondeadas · p-6: relleno interno · border border-slate-200: borde sutil -->
-  <div class="bg-slate-50 rounded-2xl p-2 border border-slate-200 overflow-hidden">
-    <img 
-      src="img/foto1.jpg" 
-      alt="Foto de Oscar" 
-      class="w-full h-auto rounded-xl object-cover"
-    >
-  </div>
-<!-- cierre de la sección "sobre-mi" -->
-</section>
 
-<!-- footer id="contacto": acá aterriza el enlace "Contacto" del nav -->
-<!-- bg-slate-900 text-white: mismo tono oscuro que el header, para cerrar la página con el mismo color -->
-<footer id="contacto" class="bg-slate-900 text-white py-14">
-  <!-- max-w-xl mx-auto: contenedor más angosto que las otras secciones, cómodo para un formulario -->
-  <div class="max-w-xl mx-auto px-6">
-    <!-- título de sección, mismo estilo que las anteriores -->
-    <h2 class="text-2xl font-bold mb-6">Contacto</h2>
+<body class="bg-slate-50 text-slate-200 antialiased selection:bg-emerald-500 selection:text-white">
 
-    <!-- form: space-y-4 agrega separación vertical automática entre cada div hijo directo -->
-    <form class="space-y-4">
-      <!-- div: agrupa la etiqueta y el campo de "Nombre" -->
+  <!-- Barra de progreso superior -->
+  <div class="scroll-progress"><span id="scroll-progress-bar"></span></div>
+
+  <!-- NAVEGACIÓN -->
+  <header class="sticky top-0 z-50 bg-slate-100/90 backdrop-blur-md border-b border-white/10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="#inicio" class="flex items-center gap-3 group">
+          <img src="img/foto1.jpg" alt="Foto de Oscar" class="h-10 w-10 rounded-full object-cover ring-2 ring-emerald-500/50 group-hover:ring-emerald-400 transition">
+          <span class="font-bold text-white text-sm tracking-wide hidden sm:inline-block">GVO</span>
+        </a>
+        <nav class="flex items-center gap-4 text-xs sm:text-sm font-medium text-slate-300 sm:gap-6">
+          <a href="#inicio" class="hover:text-emerald-400 transition">Inicio</a>
+          <a href="#sobre-mi" class="hover:text-emerald-400 transition">Sobre mí</a>
+          <a href="#skills" class="hover:text-emerald-400 transition">Skills</a>
+          <a href="#proyectos" class="hover:text-emerald-400 transition">Proyectos</a>
+          <a href="#entregas" class="hover:text-emerald-400 transition">Entregas</a>
+          <a href="#contacto" class="hover:text-emerald-400 transition">Contacto</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- HÉROE / INICIO -->
+  <section id="inicio" class="relative overflow-hidden bg-ink py-20 sm:py-28 border-b border-white/10">
+    <div class="absolute inset-0 bg-gradient-to-br from-brand-900 via-ink to-slate-900"></div>
+    <div class="hero-grid"></div>
+    
+    <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col sm:flex-row items-center sm:items-start gap-8">
+        
+        <div class="relative flex-none">
+          <img src="img/foto1.jpg" alt="Foto de Garcia Vasquez Oscar" class="profile-photo h-32 w-32 sm:h-36 sm:w-36 rounded-2xl object-cover ring-4 ring-emerald-500/40 shadow-2xl">
+          <span class="absolute -bottom-2 -right-2 bg-emerald-500 text-ink font-bold text-[10px] uppercase px-2 py-0.5 rounded-full ring-2 ring-ink">Disponible</span>
+        </div>
+
+        <div class="text-center sm:text-left">
+          <p class="text-emerald-400 text-xs font-semibold uppercase tracking-widest font-mono">Portafolio · Desarrollo Web</p>
+          <h1 class="text-3xl sm:text-5xl font-extrabold text-white mt-2 tracking-tight">GARCIA VASQUEZ OSCAR</h1>
+          <p class="text-slate-300 mt-2 font-medium">Estudiante de Desarrollo Web · <span class="text-emerald-400 font-semibold">UTH</span></p>
+          <p class="mt-4 text-slate-300 max-w-xl text-sm sm:text-base leading-relaxed">
+            Apasionado por la tecnología, creando soluciones digitales modernas y funcionales con enfoque en interfaces limpias y de alto rendimiento.
+          </p>
+          
+          <div class="mt-6 flex flex-wrap justify-center sm:justify-start gap-3">
+            <a href="https://github.com/garciavasquezdsm3" target="_blank" rel="noopener noreferrer" class="rounded-lg bg-emerald-500 hover:bg-emerald-400 text-ink font-bold px-5 py-2.5 text-sm transition shadow-lg shadow-emerald-500/20">
+              GitHub: garciavasquezdsm3
+            </a>
+            <a href="#entregas" class="rounded-lg bg-white/10 text-white font-semibold px-5 py-2.5 text-sm border border-white/20 hover:bg-white/20 transition">
+              Ver Mis Repositorios →
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE MÍ -->
+  <section id="sobre-mi" class="scroll-reveal max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <p class="text-emerald-400 font-semibold text-xs uppercase tracking-widest font-mono">Sobre mí</p>
+    <h2 class="text-2xl sm:text-3xl font-extrabold mt-1 text-white">Conóceme mejor</h2>
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+      <div class="md:col-span-2 text-slate-300 leading-relaxed text-sm sm:text-base space-y-4">
+        <p>
+          Soy Oscar, estudiante apasionado por el desarrollo web y el diseño de experiencia de usuario. Me enfoco en aprender constantemente nuevas tecnologías del ecosistema moderno para transformar ideas en productos funcionales.
+        </p>
+        <p>
+          Mi objetivo principal es dominar tanto el frontend como el backend, construyendo código limpio, mantenible y escalable.
+        </p>
+      </div>
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-6 text-center card-hover">
+        <span class="text-4xl">🚀</span>
+        <h3 class="font-bold text-white mt-2">Enfoque</h3>
+        <p class="text-xs text-slate-400 mt-1">Desarrollo Frontend, Backend & Arquitectura Web.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS / STACK -->
+  <section id="skills" class="scroll-reveal bg-slate-100 border-y border-white/10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <p class="text-emerald-400 font-semibold text-xs uppercase tracking-widest font-mono">Tecnologías</p>
+      <h2 class="text-2xl sm:text-3xl font-extrabold mt-1 text-white">Skills & Herramientas</h2>
+      
+      <div class="mt-8 flex flex-wrap gap-3">
+        <span class="px-4 py-2.5 rounded-xl bg-orange-500/10 text-orange-400 text-sm font-semibold border border-orange-500/20 card-hover">HTML5 Semántico</span>
+        <span class="px-4 py-2.5 rounded-xl bg-sky-500/10 text-sky-400 text-sm font-semibold border border-sky-500/20 card-hover">Tailwind CSS</span>
+        <span class="px-4 py-2.5 rounded-xl bg-yellow-500/10 text-yellow-400 text-sm font-semibold border border-yellow-500/20 card-hover">JavaScript ES6+</span>
+        <span class="px-4 py-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 text-sm font-semibold border border-emerald-500/20 card-hover">Django (Python)</span>
+        <span class="px-4 py-2.5 rounded-xl bg-blue-500/10 text-blue-400 text-sm font-semibold border border-blue-500/20 card-hover">MySQL</span>
+        <span class="px-4 py-2.5 rounded-xl bg-purple-500/10 text-purple-400 text-sm font-semibold border border-purple-500/20 card-hover">Git & GitHub</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROYECTOS -->
+  <section id="proyectos" class="scroll-reveal max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <p class="text-emerald-400 font-semibold text-xs uppercase tracking-widest font-mono">Portafolio</p>
+    <h2 class="text-2xl sm:text-3xl font-extrabold mt-1 text-white">Proyectos Destacados</h2>
+    <p class="mt-3 text-slate-300 max-w-2xl text-sm sm:text-base">Proyectos desarrollados aplicando buenas prácticas de maquetación y programación.</p>
+
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <article class="bg-white/5 rounded-2xl border border-white/10 overflow-hidden card-hover flex flex-col justify-between">
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-md">Django / Web App</span>
+            <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+          </div>
+          <h3 class="text-xl font-bold text-white">Mi Proyecto Django</h3>
+          <p class="text-slate-300 text-sm mt-3 leading-relaxed">
+            Aplicación backend desarrollada con el framework Django en Python para procesamiento y gestión de datos.
+          </p>
+        </div>
+        <div class="p-6 pt-0 border-t border-white/5 mt-4 flex items-center justify-between">
+          <a href="https://github.com/garciavasquezdsm3/mi_proyecto-django" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-emerald-400 font-semibold text-sm hover:text-emerald-300 transition">
+            Ver en GitHub <span>→</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="bg-white/5 rounded-2xl border border-white/10 p-6 card-hover flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-mono text-sky-400 bg-sky-500/10 border border-sky-500/20 px-2.5 py-1 rounded-md">Sostenibilidad & Hardware</span>
+          </div>
+          <h3 class="text-xl font-bold text-white">Deshidratador Solar</h3>
+          <p class="text-slate-300 text-sm mt-3 leading-relaxed">
+            Proyecto técnico orientado al aprovechamiento de energías renovables mediante un sistema eficiente de deshidratado solar.
+          </p>
+        </div>
+        <div class="pt-4 border-t border-white/5 mt-4">
+          <a href="https://github.com/garciavasquezdsm3/deshidratador-solar" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-emerald-400 font-semibold text-sm hover:text-emerald-300 transition">
+            Ver en GitHub <span>→</span>
+          </a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ENTREGAS / REPOSITORIOS OBLIGATORIOS -->
+  <section id="entregas" class="scroll-reveal bg-ink text-white border-t border-white/10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <p class="text-emerald-400 font-semibold text-xs uppercase tracking-widest font-mono">Evidencia Escolar</p>
+      <h2 class="text-2xl sm:text-3xl font-extrabold mt-1">Mis Repositorios de GitHub</h2>
+      <p class="mt-3 text-slate-300 max-w-2xl text-sm">Registro completo de prácticas y proyectos guardados en la cuenta @garciavasquezdsm3.</p>
+
+      <ul class="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        
+        <li class="rounded-2xl bg-white/5 border border-white/10 p-5 card-hover flex flex-col justify-between">
+          <div>
+            <p class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider font-mono">Diseño Web</p>
+            <p class="font-bold text-base text-white mt-1">portafolio</p>
+            <p class="text-xs text-slate-400 mt-2">Código fuente del portafolio personal interactivo.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/5">
+            <a href="https://github.com/garciavasquezdsm3/portafolio" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition">
+              Abrir repositorio ↗
+            </a>
+          </div>
+        </li>
+
+        <li class="rounded-2xl bg-white/5 border border-white/10 p-5 card-hover flex flex-col justify-between">
+          <div>
+            <p class="text-[11px] font-bold text-orange-400 uppercase tracking-wider font-mono">Maquetación</p>
+            <p class="font-bold text-base text-white mt-1">ine_personal_GARCIA</p>
+            <p class="text-xs text-slate-400 mt-2">Maquetación digital de credencial de identificación.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/5">
+            <a href="https://github.com/garciavasquezdsm3/ine_personal_GARCIA" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition">
+              Abrir repositorio ↗
+            </a>
+          </div>
+        </li>
+
+        <li class="rounded-2xl bg-white/5 border border-white/10 p-5 card-hover flex flex-col justify-between">
+          <div>
+            <p class="text-[11px] font-bold text-purple-400 uppercase tracking-wider font-mono">Backend Python</p>
+            <p class="font-bold text-base text-white mt-1">mi_proyecto-django</p>
+            <p class="text-xs text-slate-400 mt-2">Proyecto estructurado con el framework Django.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/5">
+            <a href="https://github.com/garciavasquezdsm3/mi_proyecto-django" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition">
+              Abrir repositorio ↗
+            </a>
+          </div>
+        </li>
+
+        <li class="rounded-2xl bg-white/5 border border-white/10 p-5 card-hover flex flex-col justify-between">
+          <div>
+            <p class="text-[11px] font-bold text-sky-400 uppercase tracking-wider font-mono">Práctica Escolar</p>
+            <p class="font-bold text-base text-white mt-1">P2U1-DSM-4-1</p>
+            <p class="text-xs text-slate-400 mt-2">Práctica 2 de la Unidad 1 del grupo DSM-41.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/5">
+            <a href="https://github.com/garciavasquezdsm3/P2U1-DSM-4-1" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition">
+              Abrir repositorio ↗
+            </a>
+          </div>
+        </li>
+
+        <li class="rounded-2xl bg-white/5 border border-white/10 p-5 card-hover flex flex-col justify-between">
+          <div>
+            <p class="text-[11px] font-bold text-yellow-400 uppercase tracking-wider font-mono">Multimedia</p>
+            <p class="font-bold text-base text-white mt-1">PulSvideomp3</p>
+            <p class="text-xs text-slate-400 mt-2">Herramienta para procesamiento/reproducción de archivos de audio y video.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/5">
+            <a href="https://github.com/garciavasquezdsm3/PulSvideomp3" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition">
+              Abrir repositorio ↗
+            </a>
+          </div>
+        </li>
+
+        <li class="rounded-2xl bg-white/5 border border-white/10 p-5 card-hover flex flex-col justify-between">
+          <div>
+            <p class="text-[11px] font-bold text-red-400 uppercase tracking-wider font-mono">Unidad 4</p>
+            <p class="font-bold text-base text-white mt-1">Unidad4GarciaVasquez</p>
+            <p class="text-xs text-slate-400 mt-2">Compilado de actividades correspondientes a la Unidad 4.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/5">
+            <a href="https://github.com/garciavasquezdsm3/Unidad4GarciaVasquez" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition">
+              Abrir repositorio ↗
+            </a>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section id="contacto" class="scroll-reveal max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <p class="text-emerald-400 font-semibold text-xs uppercase tracking-widest font-mono">Contacto</p>
+    <h2 class="text-2xl sm:text-3xl font-extrabold mt-1 text-white">Trabajemos juntos</h2>
+    
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-10">
+      
       <div>
-        <!-- block: el label ocupa su propia línea, arriba del input · text-sm font-semibold: letra chica y semi-negrita -->
-        <label for="nombre" class="block text-sm font-semibold mb-1">Nombre</label>
-        <input
-          <!-- type="text": campo de texto simple, igual que la semana 1 -->
+        <p class="text-slate-300 text-sm leading-relaxed mb-6">
+          ¿Tienes alguna consulta o propuesta? Envíame un mensaje mediante el formulario o contáctame por mis redes.
+        </p>
+        <div class="flex flex-col gap-3 text-sm">
+          <a href="mailto:oscar.garcia@uth.edu.mx" class="inline-flex items-center gap-2 rounded-xl border border-white/15 px-4 py-3 font-semibold text-slate-300 hover:border-emerald-400 hover:text-emerald-400 transition bg-white/5">
+            ✉️ oscar.garcia@uth.edu.mx
+          </a>
+          <a href="https://github.com/garciavasquezdsm3" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-xl border border-white/15 px-4 py-3 font-semibold text-slate-300 hover:border-emerald-400 hover:text-emerald-400 transition bg-white/5">
+            🐱 Profile: garciavasquezdsm3
+          </a>
+          <button id="copy-email" type="button" data-email="oscar.garcia@uth.edu.mx" class="inline-flex justify-center items-center rounded-xl border border-white/15 px-4 py-2.5 font-semibold text-slate-300 hover:border-emerald-400 hover:text-emerald-400 transition bg-white/5">
+            Copiar correo
+          </button>
+        </div>
       </div>
 
-      <!-- div: agrupa la etiqueta y el campo de "Correo" -->
-      <div>
-        <label for="correo" class="block text-sm font-semibold mb-1">Correo</label>
-        <input
-          <!-- type="email": el navegador exige el formato usuario@dominio antes de dejar enviar -->
-      </div>
+      <!-- Formulario de contacto -->
+      <form class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4">
+        <div>
+          <label for="nombre" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Nombre</label>
+          <input type="text" id="nombre" required placeholder="Tu nombre" class="w-full rounded-lg bg-slate-900 border border-white/15 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 transition">
+        </div>
+        <div>
+          <label for="correo" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Correo</label>
+          <input type="email" id="correo" required placeholder="tu@correo.com" class="w-full rounded-lg bg-slate-900 border border-white/15 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 transition">
+        </div>
+        <div>
+          <label for="mensaje" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Mensaje</label>
+          <textarea id="mensaje" required rows="3" minlength="10" placeholder="Escribe tu mensaje..." class="w-full rounded-lg bg-slate-900 border border-white/15 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 transition resize-none"></textarea>
+        </div>
+        <button type="submit" class="w-full rounded-lg bg-emerald-500 hover:bg-emerald-400 text-ink font-bold py-3 text-sm transition shadow-lg shadow-emerald-500/20">
+          Enviar Mensaje
+        </button>
+      </form>
 
-      <!-- div: agrupa la etiqueta y el campo de "Mensaje" -->
-      <div>
-        <label for="mensaje" class="block text-sm font-semibold mb-1">Mensaje</label>
-        <!-- textarea: campo de varias líneas, no lleva atributo "type" -->
-        <textarea
-          id="mensaje"
-          name="mensaje"
-          required
-          <!-- entre 10 y 500 caracteres -->
-          minlength="10"
-          maxlength="500"
-          <!-- rows: cuántas líneas de alto se ven sin hacer scroll -->
-          rows="4"
-          <!-- mismas clases que los otros campos, más resize-none para que el usuario no pueda estirarlo -->
-          class="w-full rounded-lg bg-slate-800 border border-slate-700
-            px-4 py-2 text-white placeholder-slate-500 resize-none
-            focus:outline-none focus:ring-2 focus:ring-emerald-400"></textarea>
-      <!-- cierre del div de "Mensaje" -->
-      </div>
+    </div>
+  </section>
 
-      <!-- button type="submit": dispara el envío y activa la validación de todos los campos de arriba -->
-      <button type="submit"
-        <!-- bg-emerald-600 hover:bg-emerald-700: fondo verde que se oscurece al pasar el mouse · transition: suaviza el cambio -->
-        <!-- text-white font-semibold: texto claro y semi-negrita · px-6 py-2.5 rounded-lg: relleno y esquinas redondeadas -->
-        <!-- focus:ring-offset-2 focus:ring-offset-slate-900: separa el aro de foco del fondo oscuro para que se vea bien -->
-        Enviar
-      <!-- cierre de button -->
-      </button>
-    <!-- cierre del form -->
-    </form>
-  <!-- cierre del div contenedor -->
-  </div>
-<!-- cierre de footer -->
-</footer>
+  <!-- PIE DE PÁGINA -->
+  <footer class="bg-slate-100 border-t border-white/10 text-slate-400 text-sm">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p>© 2026 Garcia Vasquez Oscar · UTH</p>
+      <p class="text-xs font-mono text-slate-500">Desarrollo Web Profesional</p>
+    </div>
+  </footer>
+
+  <!-- Botón Volver Arriba -->
+  <button id="back-to-top" type="button" class="back-to-top h-11 w-11 flex items-center justify-center rounded-full border border-white/15 bg-slate-100 text-white shadow-xl hover:bg-emerald-500 hover:text-ink transition">
+    ↑
+  </button>
+
+  <script>
+    const progressBar = document.querySelector('#scroll-progress-bar');
+    const updateScrollProgress = () => {
+      const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0;
+      progressBar.style.transform = `scaleX(${Math.min(progress, 1)})`;
+    };
+    window.addEventListener('scroll', updateScrollProgress, { passive: true });
+
+    const copyEmailButton = document.querySelector('#copy-email');
+    copyEmailButton?.addEventListener('click', async () => {
+      const email = copyEmailButton.dataset.email;
+      try {
+        await navigator.clipboard.writeText(email);
+        copyEmailButton.textContent = '¡Copiado con éxito!';
+      } catch {
+        copyEmailButton.textContent = 'Error al copiar';
+      }
+      setTimeout(() => {
+        copyEmailButton.textContent = 'Copiar correo';
+      }, 2000);
+    });
+
+    const backToTop = document.querySelector('#back-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) {
+        backToTop.classList.add('is-visible');
+      } else {
+        backToTop.classList.remove('is-visible');
+      }
+    }, { passive: true });
+
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    const revealItems = document.querySelectorAll('.scroll-reveal');
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      revealItems.forEach(item => observer.observe(item));
+    } else {
+      revealItems.forEach(item => item.classList.add('is-visible'));
+    }
+  </script>
 </body>
-<!-- section id="proyectos": acá aterriza el enlace "Proyectos" del nav -->
-<!-- max-w-5xl mx-auto px-6 py-14: mismo contenedor centrado que las secciones anteriores -->
-<section id="proyectos" class="max-w-5xl mx-auto px-6 py-14">
-  <!-- título de sección, mismo estilo que "Sobre mí" y "Skills" -->
-  <h2 class="text-2xl font-bold mb-6">Proyectos</h2>
-  <!-- grid-cols-1 md:grid-cols-2: una columna en celular, dos desde 768px · gap-6: separación entre tarjetas -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- rounded-2xl border p-6: tarjeta con esquinas bien redondeadas, borde y relleno -->
-    <!-- shadow-sm hover:shadow-lg: sombra leve que crece bastante al pasar el mouse -->
-    <!-- hover:-translate-y-1: la tarjeta "flota" un poco hacia arriba · transition: suaviza ambos cambios -->
-    <article class="bg-white rounded-2xl border border-slate-200 p-6
-      shadow-sm hover:shadow-lg hover:-translate-y-1 transition">
-      <!-- text-lg font-bold: nombre del proyecto, más grande que el de skills · mb-2: margen abajo -->
-      <h3 class="text-lg font-bold mb-2">IA AFRICANA GRATUITA</h3>
-      <!-- text-slate-600 text-sm: descripción breve · mb-4: margen antes del enlace -->
-      <p class="text-slate-600 text-sm mb-4">IA AFRICANA es una inteligencia artificial gratis para gente de escasos recursos</p>
-      <!-- text-emerald-700: enlace en verde · hover:underline: subrayado solo al pasar el mouse -->
-      <a href="#" class="text-emerald-700 font-semibold text-sm hover:underline">Ver repositorio →</a>
-    <!-- cierre de la tarjeta de proyecto -->
-    </article>
-  <!-- cierre de la grilla de proyectos -->
-  </div>
-<!-- cierre de la sección "proyectos" -->
-</section>
 </html>
